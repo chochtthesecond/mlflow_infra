@@ -81,7 +81,7 @@ COMPOSE_PATH_SEPARATOR=','
 Чтобы создать свой проект, нужно провести следующие манипуляции:
 
 1. указать имя бакета для проекта в файле `minio/buckets_list.txt`
-(сохранять файл нужно обязательно в unix формате **LF line end** )
+(сохранять файл нужно обязательно в unix формате **LF line end**)
 [info](https://labex.io/tutorials/linux-how-to-normalize-line-endings-in-linux-text-files-418212)
 2. в файле `postgres/projects_db_configs.json` добавить конфигурацию бд
 проекта в список `db_projects_configs`. Нужно указать
@@ -92,3 +92,14 @@ mlflow для подключения к базе и s3. Создавать по 
 4. наконец, по аналогии с [файлом](./test_flow.compose.yaml)
 создать свою конфигурацию compose для проекта.
 Обязательно нужно поменять:
+
+## Используемые контейнеры
+
+В данном проекте используются кастомные контейнеры:
+
+- [lenow/mlflow-server](https://hub.docker.com/r/lenow/mlflow-server) - сервер mlflow
+- [lenow/sql-initer](https://hub.docker.com/r/lenow/sql-initer) - создание баз данных
+по конфигурации
+
+Посмотреть код этих контейнеров и собрать их самостоятельно
+можно [здесь](https://github.com/lenow55/open_mlflow_docker)
