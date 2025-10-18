@@ -1,0 +1,17 @@
+{
+  "connect_config": {
+    "db_host": "postgres",
+    "db_port": 5432,
+    "db_user": "user",
+    "db_name": "startdb",
+    "db_password": "password",
+    "sql_command_echo": true
+  },
+  "db_projects_configs": [
+    {
+      "username": "mlflow_test",
+      "password": "password2",
+      "database_name": "mlflow"
+    }
+  ]
+}

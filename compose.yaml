@@ -1,0 +1,68 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    env_file: ./postgres/postgres.env
+    ports:
+      - 8533:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "sh -c 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}'",
+        ]
+      interval: 30s
+      timeout: 60s
+      retries: 5
+      start_period: 80s
+
+  psql-init:
+    image: lenow/sql-initer:v2.0 # ваш образ с хаба
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./postgres/projects_db_configs.json/:/app/config.json
+    restart: "no"
+
+  minio:
+    image: minio/minio
+    ports:
+      - "9574:9000"
+      # MinIO Console is available at http://localhost:9321
+      - "9321:9001"
+    env_file: ./minio/minio.env
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 1s
+      timeout: 10s
+      retries: 5
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+
+  minio-create-bucket:
+    image: minio/mc
+    depends_on:
+      minio:
+        condition: service_healthy
+    env_file: ./minio/minio.env
+    entrypoint: /minio_init.sh
+    volumes:
+      - ./minio/buckets_list.txt:/buckets_list
+      - ./minio/minio_init.sh:/minio_init.sh
+
+volumes:
+  minio_data:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "./minio_data"
+  postgres_data:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "./postgres_data"
