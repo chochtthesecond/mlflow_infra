@@ -1,6 +1,6 @@
 services:
   test-mlflow-server:
-    image: lenow/mlflow-server:v3.5.0 # ваш образ с хаба
+    image: mlflow/mlflow:latest
     depends_on:
       postgres:
         condition: service_healthy
