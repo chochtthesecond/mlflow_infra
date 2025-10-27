@@ -6,6 +6,8 @@ if [ ! -z "$MLFLOW_AUTH_USERS" ]; then
   chmod 600 /app/users.conf
 fi
 
+pip install mlflow[auth] > /dev/null 2>&1
+
 mlflow server \
   --backend-store-uri=${STORE_URI} \
   --artifacts-destination=${ARTIFACTS_DESTINATION} \
